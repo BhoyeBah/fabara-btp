@@ -107,6 +107,36 @@ Fonctionne sur un hébergement mutualisé avec cPanel (PHP 8.3 + MySQL) ou sur u
 6. **E-mails** (mot de passe oublié, alertes) : remplissez les lignes `MAIL_*` du `.env` avec les paramètres SMTP de votre hébergeur. Tant que `MAIL_MAILER=log`, les e-mails sont seulement écrits dans `storage/logs`.
 7. **Photos** : vérifiez dans cPanel › « Sélectionner une version de PHP » › Options que `upload_max_filesize` vaut au moins `8M` et `post_max_size` au moins `30M`.
 
+## Déploiement avec Coolify sur Hetzner
+
+Le `Dockerfile` à la racine construit l'application Laravel avec Apache et PHP 8.3. Dans Coolify, connectez le dépôt Git, choisissez **Dockerfile** comme méthode de build et indiquez le port du conteneur **80**. N'ajoutez pas de fichier `.env` à l'image : configurez les variables suivantes dans l'environnement de l'application Coolify :
+
+```env
+APP_ENV=production
+APP_DEBUG=false
+APP_URL=https://votre-domaine.com
+APP_KEY=base64:...                  # Générée une seule fois avec php artisan key:generate --show
+
+DB_CONNECTION=mysql
+DB_HOST=...                         # Nom d'hôte interne du service MySQL/MariaDB Coolify
+DB_PORT=3306
+DB_DATABASE=...
+DB_USERNAME=...
+DB_PASSWORD=...
+
+SESSION_DRIVER=database
+SESSION_ENCRYPT=true
+```
+
+Créez une base MySQL ou MariaDB dans Coolify et utilisez son nom d'hôte interne pour `DB_HOST`. Ajoutez deux stockages persistants dans Coolify pour conserver les photos et documents lors des redéploiements :
+
+| Chemin dans le conteneur | Contenu |
+|---|---|
+| `/var/www/html/storage/app/private` | Photos privées des demandes de devis |
+| `/var/www/html/storage/app/public` | Photos publiques des réalisations et services |
+
+Configurez la commande de pré-déploiement Coolify `php artisan migrate --force` pour appliquer les migrations à la base configurée. Après le premier déploiement, créez le compte administrateur avec `php artisan fabara:create-admin` depuis le terminal du conteneur. Configurez également les variables `MAIL_*` pour activer l'envoi des e-mails.
+
 ---
 
 ## Protection des données clients (Google Play, App Store, loi guinéenne)
