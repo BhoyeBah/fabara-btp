@@ -206,3 +206,5 @@ public/images/                  photos du site
 ## Photos d'exemple « avant / après »
 
 Les photos de `public/images/renovation/` sont des **exemples** fournis pour démarrer : le site les présente comme « Exemple de transformation (illustration) ». Dès que vous ajoutez une réalisation avec une photo « avant » dans l'admin, ce sont vos chantiers qui s'affichent à leur place. Remplacez-les vite par vos propres chantiers : vérifiez que vous avez le droit d'utiliser toute photo trouvée sur Internet.
+
+# fabara-btp
