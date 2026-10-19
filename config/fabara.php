@@ -35,6 +35,12 @@ return [
     // Adresse qui reçoit un e-mail à chaque nouvelle demande de devis.
     'admin_notify_email' => env('ADMIN_NOTIFY_EMAIL'),
 
+    // Identifiants utilisés uniquement par le seeder explicite des administrateurs.
+    'admin_seed' => [
+        'email' => env('FABARA_ADMIN_EMAIL'),
+        'password' => env('FABARA_ADMIN_PASSWORD'),
+    ],
+
     // Version de la politique de confidentialité acceptée à l'inscription.
     'privacy_version' => '2026-10',
     'privacy_updated_at' => '16 octobre 2026',

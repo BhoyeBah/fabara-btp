@@ -65,7 +65,9 @@ php artisan serve
 
 Ouvrez http://localhost:8000, cliquez sur **Connexion** et entrez l'e-mail et le mot de passe admin que vous venez de choisir.
 
-Lancer les tests automatiques : `php artisan test` (16 tests : inscription, admin caché, confidentialité des photos, suppression de compte…).
+Pour créer le compte fourni par le seeder, configurez `FABARA_ADMIN_EMAIL` et `FABARA_ADMIN_PASSWORD` dans `.env`, puis lancez `php artisan db:seed --class=UserSeeder`. Ces identifiants ne sont pas inclus dans le code ni dans le seeder par défaut.
+
+Lancer les tests automatiques : `php artisan test` (17 tests : inscription, admin caché, confidentialité des photos, suppression de compte…).
 
 ---
 
