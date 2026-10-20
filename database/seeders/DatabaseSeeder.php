@@ -10,10 +10,19 @@ class DatabaseSeeder extends Seeder
 {
     /**
      * Remplit la galerie avec les photos de présentation fournies avec le site.
-     * Le compte administrateur se crée à part : php artisan fabara:create-admin
+     * Le compte administrateur est créé si ses identifiants sont configurés.
      */
     public function run(): void
     {
+        $adminEmail = config('fabara.admin_seed.email');
+        $adminPassword = config('fabara.admin_seed.password');
+
+        if (is_string($adminEmail) && trim($adminEmail) !== '' && is_string($adminPassword) && $adminPassword !== '') {
+            $this->call(UserSeeder::class);
+        } else {
+            $this->command?->comment('Compte admin ignoré : configurez FABARA_ADMIN_EMAIL et FABARA_ADMIN_PASSWORD pour le créer avec le seeder.');
+        }
+
         // Services de départ (modifiables ensuite dans l'admin › Services).
         $services = config('fabara.services');
         $services[] = ['title' => 'Bâtiment et rénovation', 'icon' => 'brick', 'image' => null, 'alt' => null,

@@ -58,14 +58,14 @@ Prérequis : **PHP 8.3 ou plus** et **Composer** (https://getcomposer.org). Aucu
 
 ```bash
 cd fabara-btp
-composer run setup        # installe, crée la base SQLite, ajoute la galerie de départ
+composer run setup        # installe, crée la base SQLite et ajoute la galerie de départ
 php artisan fabara:create-admin   # crée VOTRE compte administrateur
 php artisan serve
 ```
 
 Ouvrez http://localhost:8000, cliquez sur **Connexion** et entrez l'e-mail et le mot de passe admin que vous venez de choisir.
 
-Pour créer le compte fourni par le seeder, configurez `FABARA_ADMIN_EMAIL` et `FABARA_ADMIN_PASSWORD` dans `.env`, puis lancez `php artisan db:seed --class=UserSeeder`. Ces identifiants ne sont pas inclus dans le code ni dans le seeder par défaut.
+Pour créer l'administrateur avec `php artisan db:seed`, configurez `FABARA_ADMIN_EMAIL` et `FABARA_ADMIN_PASSWORD` dans `.env`, puis lancez la commande. Le seeder principal créera alors l'administrateur en plus des services et réalisations. Si l'une des valeurs est absente ou vide, il ignore uniquement la création de l'admin ; les identifiants ne sont jamais inclus dans le code.
 
 Lancer les tests automatiques : `php artisan test` (17 tests : inscription, admin caché, confidentialité des photos, suppression de compte…).
 
@@ -90,6 +90,9 @@ Fonctionne sur un hébergement mutualisé avec cPanel (PHP 8.3 + MySQL) ou sur u
 
    ADMIN_PATH=un-chemin-secret-a-vous   # changez « gestion-fb »
    ADMIN_NOTIFY_EMAIL=fabara224@gmail.com   # alerte à chaque nouvelle demande
+
+   FABARA_ADMIN_EMAIL=admin@votre-domaine.com
+   FABARA_ADMIN_PASSWORD=UnMotDePasseLongEtUnique2026
    ```
 3. **Dans le terminal du serveur :**
    ```bash
@@ -97,9 +100,9 @@ Fonctionne sur un hébergement mutualisé avec cPanel (PHP 8.3 + MySQL) ou sur u
    php artisan key:generate
    php artisan migrate --force --seed
    php artisan storage:link
-   php artisan fabara:create-admin
    php artisan config:cache && php artisan route:cache && php artisan view:cache
    ```
+   Cette commande de seed est à lancer à l'installation initiale (ou pour recréer volontairement l'admin) : elle remet aussi son mot de passe à la valeur `FABARA_ADMIN_PASSWORD`.
 4. **Activez HTTPS** (certificat SSL gratuit Let's Encrypt dans cPanel). C'est obligatoire pour la sécurité des données et pour Google Play.
 5. **Ajoutez la tâche planifiée (cron)** dans cPanel, toutes les minutes :
    ```
@@ -128,6 +131,9 @@ DB_PASSWORD=...
 
 SESSION_DRIVER=database
 SESSION_ENCRYPT=true
+
+FABARA_ADMIN_EMAIL=admin@votre-domaine.com
+FABARA_ADMIN_PASSWORD=UnMotDePasseLongEtUnique2026
 ```
 
 Créez une base MySQL ou MariaDB dans Coolify et utilisez son nom d'hôte interne pour `DB_HOST`. Ajoutez deux stockages persistants dans Coolify pour conserver les photos et documents lors des redéploiements :
@@ -137,7 +143,7 @@ Créez une base MySQL ou MariaDB dans Coolify et utilisez son nom d'hôte intern
 | `/var/www/html/storage/app/private` | Photos privées des demandes de devis |
 | `/var/www/html/storage/app/public` | Photos publiques des réalisations et services |
 
-Configurez la commande de pré-déploiement Coolify `php artisan migrate --force` pour appliquer les migrations à la base configurée. Après le premier déploiement, créez le compte administrateur avec `php artisan fabara:create-admin` depuis le terminal du conteneur. Configurez également les variables `MAIL_*` pour activer l'envoi des e-mails.
+Configurez la commande de pré-déploiement Coolify `php artisan migrate --force` pour appliquer les migrations à la base configurée. Après le premier déploiement, lancez une fois `php artisan db:seed` depuis le terminal du conteneur pour créer l'admin et charger les données de départ. Ne relancez pas ce seeder à chaque déploiement : il réapplique le mot de passe défini dans `FABARA_ADMIN_PASSWORD`. Configurez également les variables `MAIL_*` pour activer l'envoi des e-mails.
 
 ---
 

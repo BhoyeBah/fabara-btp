@@ -35,7 +35,7 @@ return [
     // Adresse qui reçoit un e-mail à chaque nouvelle demande de devis.
     'admin_notify_email' => env('ADMIN_NOTIFY_EMAIL'),
 
-    // Identifiants utilisés uniquement par le seeder explicite des administrateurs.
+    // Identifiants utilisés par le seeder principal pour créer l'administrateur.
     'admin_seed' => [
         'email' => env('FABARA_ADMIN_EMAIL'),
         'password' => env('FABARA_ADMIN_PASSWORD'),
